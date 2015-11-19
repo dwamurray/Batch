@@ -25,10 +25,10 @@ else {
 }
  
 $value = if ( $result -eq "0" )
-{ echo Disabled }
+{ write-output Disabled }
 elseif ( $result -eq "not configured" )
-{ echo "not configured" }
-else { echo Enabled }
+{ write-output Value not configured }
+else { write-output Enabled }
  
 $obj = new-object –typename psobject
  

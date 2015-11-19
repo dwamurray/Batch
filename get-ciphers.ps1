@@ -1,6 +1,8 @@
 function get-ciphers {
 
 BEGIN { 
+      
+del ciphers.txt -ea silentlycontinue
 
 $testpath = test-path -path HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\*
 

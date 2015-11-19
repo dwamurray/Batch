@@ -1,4 +1,16 @@
 function get-ciphers {
+
+BEGIN { 
+
+$testpath = test-path -path HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\*
+
+if ( $testpath -eq $False ) 
+
+{ write-output "No ciphers configured on this server" }
+
+      }
+
+PROCESS {
  
 $ciphers = dir HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers | select -expand pschildname
  
@@ -9,7 +21,8 @@ $result = if ( test-path "HKLM:\system\currentcontrolset\control\securityprovide
 { get-itemproperty -path "HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\$cipher" |
 select -expand enabled }
 else {
-"not configured" }
+"not configured" 
+}
  
 $value = if ( $result -eq "0" )
 { echo Disabled }
@@ -27,7 +40,8 @@ $obj | add-member –membertype noteproperty `
  
 Write-output $obj
 }
+        }
  
-                        }
+                      }
  
 get-ciphers | ft -auto | out-file ciphers.txt

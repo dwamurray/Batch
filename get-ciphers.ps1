@@ -19,7 +19,7 @@ $ciphers = dir HKLM:\system\currentcontrolset\control\securityproviders\schannel
 foreach ( $cipher in $ciphers )
  
 {
-$result = if ( test-path "HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\$cipher\enabled" )
+$result = if ( test-path "HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\$cipher" )
 { get-itemproperty -path "HKLM:\system\currentcontrolset\control\securityproviders\schannel\ciphers\$cipher" |
 select -expand enabled }
 else {

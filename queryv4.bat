@@ -65,15 +65,15 @@ echo Crit1 SMB patch KB4012598 is installed >>%computername%-info.txt
 echo Crit1 SMB patch KB4012598 is not installed!!! >>%computername%-info.txt
 )
 
-:: Check if there is an RBS "SSPInstalled" Registry key
+:: Check if there is an xyz "SSPInstalled" Registry key
 
 :coe
 
-reg query "HKLM\SOFTWARE\RBS" /v SSPInstalled >nul 2>&1 &
+reg query "HKLM\SOFTWARE\zyz" /v SSPInstalled >nul 2>&1 &
 if %errorlevel% equ 0 (
 goto SSPInstalledValue
 ) else (
-echo RBS COE not used on this server >>%computername%-info.txt
+echo zyx COE not used on this server >>%computername%-info.txt
 goto ciphers
 )
 
@@ -82,7 +82,7 @@ goto ciphers
 :SSPInstalledValue
 
 for /F "usebackq tokens=1-5 delims= " %%i in (
-`reg query hklm\software\rbs /v "SSPInstalled"`
+`reg query hklm\software\xyz /v "SSPInstalled"`
 ) do set coe=%%l
 
 echo The patch level is %coe% >>%computername%-info.txt
@@ -108,7 +108,7 @@ goto 2008ciphers
 
 :null
 
-reg query "%ciphers%\NULL" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\NULL" /v Enabled >nul 2>&1 
 if %errorlevel% equ 1 (
 echo No entry for NULL cipher in Registry >>%computername%-info.txt
 goto DES56
@@ -130,7 +130,7 @@ echo Null cipher is not disabled! >>%computername%-info.txt
 
 :DES56
 
-reg query "%ciphers%\DES 56/56" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\DES 56/56" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for DES 56/56 cipher in Registry >>%computername%-info.txt
 goto RC2128
@@ -153,7 +153,7 @@ echo DES 56/56 cipher is not disabled! >>%computername%-info.txt
 
 :RC2128
 
-reg query "%ciphers%\RC2 128/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC2 128/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC2 128/128 cipher in Registry >>%computername%-info.txt
 goto RC240
@@ -174,7 +174,7 @@ echo RC2 128/128 cipher is not disabled! >>%computername%-info.txt
 
 
 :RC240
-reg query "%ciphers%\RC2 40/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC2 40/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC2 40/128 cipher in Registry >> %computername%-info.txt
 goto RC256
@@ -194,7 +194,7 @@ echo RC2 40/128 cipher is not disabled! >>%computername%-info.txt
 )
 
 :RC256
-reg query "%ciphers%\RC2 56/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC2 56/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC2 56/128 cipher in Registry >> %computername%-info.txt
 goto RC4128
@@ -214,7 +214,7 @@ echo RC2 56/128 cipher is not disabled! >>%computername%-info.txt
 )
 
 :RC4128
-reg query "%ciphers%\RC4 128/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 128/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 128/128 cipher in Registry >> %computername%-info.txt
 goto RC440
@@ -235,7 +235,7 @@ echo echo RC4 128/128 cipher is not disabled! >>%computername%-info.txt
 
 
 :RC440
-reg query "%ciphers%\RC4 40/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 40/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 40/128 cipher in Registry >> %computername%-info.txt
 goto RC456
@@ -257,7 +257,7 @@ echo RC4 40/128 cipher is not disabled! >>%computername%-info.txt
 
 :RC456
 
-reg query "%ciphers%\RC4 56/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 56/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 56/128 cipher in Registry >> %computername%-info.txt
 goto RC464
@@ -279,7 +279,7 @@ echo RC4 56/128 cipher is not disabled! >>%computername%-info.txt
 
 :RC464
 
-reg query "%ciphers%\RC4 64/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 64/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 64/128 cipher in Registry >> %computername%-info.txt
 goto protocols
@@ -304,7 +304,7 @@ goto protocols
 :2008ciphers
 
 :null
-reg query "%ciphers%\NULL" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\NULL" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for NULL cipher in Registry >>%computername%-info.txt
 goto DES56
@@ -324,7 +324,7 @@ echo Null cipher is not disabled >>%computername%-info.txt
 )
 
 :DES56
-reg query "%ciphers%\DES 56/56" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\DES 56/56" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for DES 56/56 cipher in Registry >>%computername%-info.txt
 goto RC440
@@ -344,7 +344,7 @@ echo DES 56/56 cipher is not disabled! >>%computername%-info.txt
 )
 
 :RC440
-reg query "%ciphers%\RC4 40/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 40/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 40/128 cipher in Registry >>%computername%-info.txt
 goto RC456
@@ -364,7 +364,7 @@ echo RC4 40/128 cipher is not disabled! >>%computername%-info.txt
 )
 
 :RC456
-reg query "%ciphers%\RC4 56/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 56/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 56/128 cipher in Registry >>%computername%-info.txt
 goto RC4128
@@ -384,7 +384,7 @@ echo RC4 56/128 cipher is not disabled! >>%computername%-info.txt
 )
 
 :RC4128
-reg query "%ciphers%\RC4 128/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\RC4 128/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC4 128/128 cipher in Registry >>%computername%-info.txt
 goto AES128
@@ -404,7 +404,7 @@ echo RC4 128/128 cipher is not disabled! >>%computername%-info.txt
 )
 
 :AES128
-reg query "%ciphers%\AES 128/128" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\AES 128/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for AES 128/128 cipher in Registry >>%computername%-info.txt
 goto AES256
@@ -424,7 +424,7 @@ echo AES 128 cipher is enabled >>%computername%-info.txt
 )
 
 :AES256
-reg query "%ciphers%\AES 256/256" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\AES 256/256" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for AES 256/256 cipher in Registry >>%computername%-info.txt
 goto 3DES
@@ -444,7 +444,7 @@ echo AES 256 cipher is enabled >>%computername%-info.txt
 )
 
 :3DES
-reg query "%ciphers%\Triple DES 168/168" /v Enabled >nul 2>&1 &
+reg query "%ciphers%\Triple DES 168/168" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for Triple DES 168/168 cipher in Registry >>%computername%-info.txt
 goto protocols
@@ -473,18 +473,18 @@ echo. >>%computername%-info.txt
 
 :: Also need to check 2003 and 2008 / 2012 protocol suites separately
 
-wmic os get caption | findstr "2003" > nul & 
+wmic os get caption | findstr "2003" > nul
 if %errorlevel% equ 0 goto 2003protocols
 
 :: If server is 2008 or above
 
-wmic os get caption | findstr "2008 2012" > nul & 
+wmic os get caption | findstr "2008 2012" > nul
 if %errorlevel% equ 0 goto 2008protocols
 
 :2003protocols
 
 :SSL2
-reg query "%protocols%\SSL 2.0\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\SSL 2.0\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for SSL 2.0 in Registry >> %computername%-info.txt
 goto SSL3
@@ -504,7 +504,7 @@ echo SSL 2.0 is not disabled! >>%computername%-info.txt
 )
 
 :SSL3
-reg query "%protocols%\SSL 3.0\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\SSL 3.0\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for SSL 3.0 in Registry >> %computername%-info.txt
 goto NET
@@ -528,7 +528,7 @@ goto NET
 :2008protocols
 
 :SSL2
-reg query "%protocols%\SSL 2.0\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\SSL 2.0\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for SSL 2.0 in Registry >> %computername%-info.txt
 goto SSL3
@@ -549,7 +549,7 @@ echo SSL 2.0 is not disabled! >>%computername%-info.txt
 )
 
 :SSL3
-reg query "%protocols%\SSL 3.0\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\SSL 3.0\Server" /v Enabled >nul 2>&1 
 if %errorlevel% equ 1 (
 echo No entry for SSL 3.0 in Registry >> %computername%-info.txt
 goto NET
@@ -570,7 +570,7 @@ echo SSL 3.0 is not disabled! >>%computername%-info.txt
 
 :TLS10
 
-reg query "%protocols%\TLS 1.0\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\TLS 1.0\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for TLS 1.0 in Registry >> %computername%-info.txt
 goto TLS11
@@ -594,10 +594,11 @@ echo TLS 1.0 is enabled >>%computername%-info.txt
 :TLS11
 
 :: Check to see if DisabledByDefault is present and set to 0
-reg query "%protocols%\TLS 1.1\Server" /v DisabledByDefault >nul 2>&1 & 
+reg query "%protocols%\TLS 1.1\Server" /v DisabledByDefault >nul 2>&1
 if %errorlevel% equ 1 (
 echo DisabledByDefault is not set for TLS 1.1, please create it and set the value to 0 >> %computername%-info.txt
-goto TLS11enabled) else (
+goto TLS11enabled
+) else (
 goto TLS11default
 )
 
@@ -615,7 +616,7 @@ echo TLS 1.1 is disabled by default >>%computername%-info.txt
 :: Now check to see TLS 1.1 is explicitly enabled
 
 :TLS11enabled
-reg query "%protocols%\TLS 1.1\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\TLS 1.1\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for TLS 1.1 in Registry >> %computername%-info.txt
 goto TLS12
@@ -634,11 +635,10 @@ echo TLS 1.1 is disabled! >>%computername%-info.txt
 echo TLS 1.1 is enabled >>%computername%-info.txt
 )
 
-
 :TLS12
 
 :: Check to see if DisabledByDefault is present and set to 0
-reg query "%protocols%\TLS 1.2\Server" /v DisabledByDefault >nul 2>&1 & 
+reg query "%protocols%\TLS 1.2\Server" /v DisabledByDefault >nul 2>&1
 if %errorlevel% equ 1 (
 echo DisabledByDefault is not set for TLS 1.2, please create it and set the value to 0 >> %computername%-info.txt
 goto TLS12enabled
@@ -660,7 +660,7 @@ echo TLS 1.2 is disabled by default >>%computername%-info.txt
 :: Now check to see TLS 1.2 is explicitly enabled
 
 :TLS12enabled
-reg query "%protocols%\TLS 1.2\Server" /v Enabled >nul 2>&1 & 
+reg query "%protocols%\TLS 1.2\Server" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No Enabled entry for TLS 1.2 in Registry >> %computername%-info.txt
 goto NET
@@ -690,7 +690,7 @@ echo. >>%computername%-info.txt
 
 :: .NET 1
 
-reg query %dotnet% /f 1. >nul 2>&1 &
+reg query %dotnet% /f 1. >nul 2>&1
 if %errorlevel% equ 0 (
 echo .NET 1 installed >>%computername%-info.txt
 ) else (
@@ -699,7 +699,7 @@ echo .NET 1 not installed >>%computername%-info.txt
 
 :: .NET 2
 
-reg query %dotnet% /f 2. >nul 2>&1 &
+reg query %dotnet% /f 2. >nul 2>&1
 if %errorlevel% equ 0 (
 echo .NET 2 installed >>%computername%-info.txt
 ) else (
@@ -708,7 +708,7 @@ echo .NET 2 not installed >>%computername%-info.txt
 
 :: .NET 3.5
 
-reg query %dotnet% /f 3.5 >nul 2>&1 &
+reg query %dotnet% /f 3.5 >nul 2>&1
 if %errorlevel% equ 0 (
 echo .NET 3.5 installed >>%computername%-info.txt
 ) else (
@@ -717,7 +717,7 @@ echo .NET 3.5 not installed >>%computername%-info.txt
 
 :: .NET 4
 
-reg query %dotnet% /f 4. >nul 2>&1 &
+reg query %dotnet% /f 4. >nul 2>&1
 if %errorlevel% equ 0 (
 echo .NET 4 installed >>%computername%-info.txt
 ) else (

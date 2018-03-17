@@ -44,12 +44,12 @@ dir c:\ | find /i "bytes free" >>%computername%-info.txt
 
 :: If Windows 2008 or above, skip to COE check
 
-wmic os get caption | findstr "2008 2012" > nul & 
+wmic os get caption | findstr "2008 2012" >nul
 if %errorlevel% equ 0 goto coe
 
 :: Check to see if KB948963 is installed (support for TLS 1.0 and AES 128 & 256 on Windows Server 2003 only)
 
-reg query "HKLM\SOFTWARE\Microsoft\Updates\Windows Server 2003\SP3\KB948963" >nul 2>&1 &
+reg query "HKLM\SOFTWARE\Microsoft\Updates\Windows Server 2003\SP3\KB948963" >nul 2>&1
 if %errorlevel% equ 0 (
 echo KB948963 is installed - supports TLS 1.0, AES 128 and 256 >>%computername%-info.txt
 ) else (
@@ -58,7 +58,7 @@ echo KB948963 is not installed - does not support TLS 1.0, AES 128 or 256 >>%com
 
 :: Check for KB4012598 (SMB patch Windows 2003 only)
 
-reg query "HKLM\SOFTWARE\Microsoft\Updates\Windows Server 2003\SP3\KB4012598" >nul 2>&1 &
+reg query "HKLM\SOFTWARE\Microsoft\Updates\Windows Server 2003\SP3\KB4012598" >nul 2>&1
 if %errorlevel% equ 0 (
 echo Crit1 SMB patch KB4012598 is installed >>%computername%-info.txt
 ) else (
@@ -97,7 +97,7 @@ echo. >>%computername%-info.txt
 
 :: Get cipher configuration, varies by OS version
 
-wmic os get caption | findstr "2003" > nul & 
+wmic os get caption | findstr "2003" >nul
 if %errorlevel% equ 0 (
 goto 2003ciphers
 ) else (
@@ -106,8 +106,7 @@ goto 2008ciphers
 
 :2003ciphers
 
-:null
-
+:nullcipher
 reg query "%ciphers%\NULL" /v Enabled >nul 2>&1 
 if %errorlevel% equ 1 (
 echo No entry for NULL cipher in Registry >>%computername%-info.txt
@@ -117,7 +116,6 @@ goto nullvalue
 )
 
 :nullvalue
-
 for /F "usebackq tokens=1-5" %%i in (
 `reg query "%CIPHERS%\NULL" /v Enabled`
 ) do set NULL=%%k
@@ -129,7 +127,6 @@ echo Null cipher is not disabled! >>%computername%-info.txt
 )
 
 :DES56
-
 reg query "%ciphers%\DES 56/56" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for DES 56/56 cipher in Registry >>%computername%-info.txt
@@ -139,7 +136,6 @@ goto DES56value
 )
 
 :DES56value
-
 for /F "usebackq tokens=1-5" %%i in (
 `reg query "%CIPHERS%\DES 56/56" /v Enabled`
 ) do set DES56=%%k 
@@ -152,7 +148,6 @@ echo DES 56/56 cipher is not disabled! >>%computername%-info.txt
 
 
 :RC2128
-
 reg query "%ciphers%\RC2 128/128" /v Enabled >nul 2>&1
 if %errorlevel% equ 1 (
 echo No entry for RC2 128/128 cipher in Registry >>%computername%-info.txt
@@ -171,7 +166,6 @@ echo RC2 128/128 cipher is disabled >>%computername%-info.txt
 ) else (
 echo RC2 128/128 cipher is not disabled! >>%computername%-info.txt
 )
-
 
 :RC240
 reg query "%ciphers%\RC2 40/128" /v Enabled >nul 2>&1

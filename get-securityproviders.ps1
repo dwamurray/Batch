@@ -6,6 +6,7 @@ try {
 get-wmiobject win32_operatingsystem -ComputerName $server -ea stop | out-null
 } catch {
 "Cannot contact $server" | out-file errors.txt -append
+break
 }
 
 $cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"

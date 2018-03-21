@@ -5,6 +5,12 @@ param([string]$server)
 $cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
 $protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
 
+try {
+Get-WmiObject win32_operatingsystem -comp $_ -ea Stop
+} Catch {
+$_ | Out-File errors.txt -append
+}
+
 $nullcipher = reg query \\$server\$cipherpath\null /v Enabled 2>&1
 if ( $LASTEXITCODE -eq "1" ) 
 { $nullcipher = "Not configured" } 
@@ -237,11 +243,14 @@ Write-output $obj
 
 function get-securityproviders {
 
-param ([string[]]$server)
+[CmdletBinding()]
+param(
+[Parameter(Mandatory=$true)]
+[string[]] $server
+)
 
 BEGIN {
 $usedParameter = $False
-$servers = get-content servers.txt
 if ($PSBoundParameters.ContainsKey('server')) {
 $usedParameter = $True
 }
@@ -249,7 +258,7 @@ $usedParameter = $True
 }
 PROCESS {
 if ($usedParameter) {
-foreach ($line in $servers) {
+foreach ($line in $server) {
 query $server
 }
 

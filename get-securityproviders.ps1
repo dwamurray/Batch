@@ -249,7 +249,7 @@ $usedParameter = $True
 }
 PROCESS {
 if ($usedParameter) {
-foreach ($server in $servers) {
+foreach ($line in $servers) {
 query $server
 }
 

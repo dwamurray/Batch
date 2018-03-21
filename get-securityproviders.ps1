@@ -1,18 +1,9 @@
-﻿function get-securityproviders {
+function query {
 
-BEGIN {  
-     
-del security_providers.csv -ea silentlycontinue
-$servers = get-content servers.txt
+param([string]$server)
+  
 $cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
 $protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
-
-}
-
-PROCESS {
-
-foreach ( $server in $servers ) 
-{
 
 $nullcipher = reg query \\$server\$cipherpath\null /v Enabled 2>&1
 if ( $LASTEXITCODE -eq "1" ) 
@@ -24,7 +15,6 @@ elseif (
 { $nullcipher = "Disabled" }
 else { $nullcipher = "Enabled" }
 
-
 $DES56 = reg query "\\$server\$cipherpath\DES 56/56" /v Enabled 2>&1
 if ( $LASTEXITCODE -eq "1" )
 { $DES56 = "Not configured" }
@@ -34,7 +24,6 @@ elseif (
 )
 { $DES56 = "Disabled" }
 else { $DES56 = "Enabled" }
-
 
 $RC4128 = reg query "\\$server\$cipherpath\RC4 128/128" /v Enabled  2>&1
 if ( $LASTEXITCODE -eq "1" )
@@ -116,7 +105,6 @@ elseif (
 { $SSL2 = "Disabled" }
 else { $SSL2 = "Enabled" }
 
-
 $SSL3 = reg query "\\$server\$protocolpath\SSL 3.0\Server" /v Enabled  2>&1
 if ( $LASTEXITCODE -eq "1" ) 
 { $SSL3 = "Not configured" } 
@@ -126,7 +114,6 @@ elseif (
 ) 
 { $SSL3 = "Disabled" } 
 else { $SSL3 = "Enabled" }
-
 
 $TLS10 = reg query "\\$server\$protocolpath\TLS 1.0\Server" /v Enabled  2>&1
 if ( $LASTEXITCODE -eq "1" )
@@ -244,12 +231,34 @@ $obj | add-member -membertype noteproperty `
 $obj | add-member -membertype noteproperty `
 -name "TLS 1.2 DisabledByDefault" -value $TLS12D
 
-
 Write-output $obj
+
 }
+
+function get-securityproviders {
+
+param ([string[]]$server)
+
+BEGIN {
+$usedParameter = $False
+$servers = get-content servers.txt
+if ($PSBoundParameters.ContainsKey('server')) {
+$usedParameter = $True
 }
 
 }
+PROCESS {
+if ($usedParameter) {
+foreach ($server in $servers) {
+query $server
+}
+
+} else {
+query $_
+}
+}
+END {}
+} 
 
  
-get-securityproviders | export-csv security_providers.csv
+get-securityproviders 

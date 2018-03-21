@@ -1,15 +1,15 @@
 function query {
 
 param([string]$server)
-  
-$cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
-$protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
 
 try {
-Get-WmiObject win32_operatingsystem -comp $_ -ea Stop
-} Catch {
-$_ | Out-File errors.txt -append
+get-wmiobject win32_operatingsystem -ComputerName $server -ea stop | out-null
+} catch {
+"Cannot contact $server" | out-file errors.txt -append
 }
+
+$cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
+$protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
 
 $nullcipher = reg query \\$server\$cipherpath\null /v Enabled 2>&1
 if ( $LASTEXITCODE -eq "1" ) 
@@ -244,10 +244,13 @@ Write-output $obj
 function get-securityproviders {
 
 [CmdletBinding()]
-param(
-[Parameter(Mandatory=$true)]
-[string[]] $server
+param (	
+[Parameter(Mandatory=$True,
+ValueFromPipeline=$True,
+ValueFromPipelineByPropertyName=$True)]
+[string[]]$server
 )
+
 
 BEGIN {
 $usedParameter = $False
@@ -272,6 +275,8 @@ END {}
 #####################################
 # Run using any of these formats:
 # get-securityproviders -server david-lap | export-csv results.csv
-# get-securityproviders -server (get-content c:\temp\serverlist.txt) | export-csv results.csv
-# get-securityproviders -server server1,server2,server3 | export-csv results.csv
+# 'server1','server2','server3' | get-securityproviders | export-csv results.csv
+# get-content servers.txt | get-securityproviders | export-csv results.csv
 ######################################
+
+'david-lap','booby' | get-securityproviders | export-csv results.csv -NoTypeInformation

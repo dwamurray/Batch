@@ -261,4 +261,4 @@ END {}
 } 
 
  
-get-securityproviders 
+get-securityproviders -server david-lap | export-csv results.csv

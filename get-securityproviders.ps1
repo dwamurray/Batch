@@ -260,5 +260,9 @@ query $_
 END {}
 } 
 
- 
-get-securityproviders -server david-lap | export-csv results.csv
+#####################################
+# Run using any of these formats:
+# get-securityproviders -server david-lap | export-csv results.csv
+# get-securityproviders -server (get-content c:\temp\serverlist.txt) | export-csv results.csv
+# get-securityproviders -server server1,server2,server3 | export-csv results.csv
+######################################

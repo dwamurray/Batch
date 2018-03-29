@@ -258,6 +258,8 @@ Write-output $obj
 
 }
 
+END {}
+
 function get-securityproviders {
 
 [CmdletBinding()]

@@ -253,12 +253,13 @@ $obj | add-member -membertype noteproperty `
 -name "TLS 1.2 DisabledByDefault" -value $TLS12D
 
 Write-output $obj
-
 }
-
 }
-
 END {}
+
+}
+
+# This is the function that is used and it allows for giving several options to load in the server(s) to be queried
 
 function get-securityproviders {
 

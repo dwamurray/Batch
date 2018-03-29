@@ -1,13 +1,27 @@
+# This is the 'worker function' that does the querying
+
 function query {
 
-param([string]$server)
+# Declare parameter
+
+param($server)
+
+BEGIN {
+
+$ev = "False"
 
 try {
 get-wmiobject win32_operatingsystem -ComputerName $server -ea stop | out-null
 } catch {
 "Cannot contact $server" | out-file errors.txt -append
-break
+$ev = "True"
 }
+
+}
+
+PROCESS {
+
+if ( $ev -eq "False" ) {
 
 $cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
 $protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
@@ -239,6 +253,8 @@ $obj | add-member -membertype noteproperty `
 -name "TLS 1.2 DisabledByDefault" -value $TLS12D
 
 Write-output $obj
+
+}
 
 }
 

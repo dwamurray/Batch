@@ -1,5 +1,25 @@
+function querywork {
 
-$cipherpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
+param($server)
+
+BEGIN {
+
+$ev = "False"
+
+try {
+get-wmiobject win32_operatingsystem -ComputerName $server -ea stop | out-null
+} catch {
+"Cannot contact $server" | out-file errors.txt -append
+$ev = "True"
+}
+
+}
+
+PROCESS {
+
+if ( $ev -eq "False" ) {
+
+$cipherpath = "\\$server\HKLM\system\currentcontrolset\control\securityproviders\schannel\ciphers"
 $ciphers = @(
 'NULL',
 'DES 56/56',
@@ -16,7 +36,7 @@ $ciphers = @(
 'Triple DES 168/168'
 )
 
-$protocolpath = "HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
+$protocolpath = "\\$server\HKLM\system\currentcontrolset\control\securityproviders\schannel\protocols"
 $protocols = @(
 'SSL 2.0\Client',
 'SSL 2.0\Server',
@@ -27,7 +47,7 @@ $protocols = @(
 )
 
 $COE = if ( 
-get-content C:\vlogdir\coe08128.log | 
+get-content \\$server\C$\vlogdir\coe08128.log | 
 select-string "9.9.0\\.*has"
 ) { 
 "9.9.0 installed"
@@ -36,7 +56,7 @@ select-string "9.9.0\\.*has"
 }
 
 $KB948963 = if ( 
-get-hotfix | select KB948963
+get-hotfix -computer $server | select KB948963
 ) {
 "Installed"
 } else {
@@ -44,7 +64,7 @@ get-hotfix | select KB948963
 }
 
 $KB4012598 = if ( 
-get-hotfix | select KB4012598
+get-hotfix -computer $server | select KB4012598
 ) {
 "Installed"
 } else {
@@ -54,7 +74,7 @@ get-hotfix | select KB4012598
 $obj = new-object –typename psobject
 
 $obj | add-member –membertype noteproperty `
--name Server –value $env:computername
+-name Server –value $server
 
 $obj | add-member –membertype noteproperty `
 -name "Patch level" –value $COE
@@ -113,5 +133,47 @@ $obj | add-member –membertype noteproperty `
 
 
 }
+
 write-output $obj
 
+}
+}
+}
+
+function get-w2k3info {
+
+[CmdletBinding()]
+param (	
+[Parameter(Mandatory=$True,
+ValueFromPipeline=$True,
+ValueFromPipelineByPropertyName=$True)]
+[string[]]$server
+)
+
+
+BEGIN {
+$usedParameter = $False
+if ($PSBoundParameters.ContainsKey('server')) {
+$usedParameter = $True
+}
+
+}
+PROCESS {
+if ($usedParameter) {
+foreach ($line in $server) {
+query $server
+}
+
+} else {
+querywork $_
+}
+}
+END {}
+} 
+
+#####################################
+# Run using any of these formats:
+
+######################################
+
+$env:computername | get-w2k3info | export-csv results.csv -notype

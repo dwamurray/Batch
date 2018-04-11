@@ -161,7 +161,7 @@ $usedParameter = $True
 PROCESS {
 if ($usedParameter) {
 foreach ($line in $server) {
-query $server
+querywork $server
 }
 
 } else {

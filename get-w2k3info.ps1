@@ -171,9 +171,7 @@ querywork $_
 END {}
 } 
 
-#####################################
 # Run using any of these formats:
 
-######################################
-
-$env:computername | get-w2k3info | export-csv results.csv -notype
+#$env:computername | get-w2k3info | export-csv results.csv -notype
+#get-content servers.txt | get-w2k3info | export-csv results.csv -notype

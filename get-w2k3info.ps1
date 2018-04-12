@@ -56,7 +56,8 @@ select-string "9.9.0\\.*has"
 }
 
 $KB948963 = if ( 
-get-hotfix -computer $server | select KB948963
+get-hotfix -computer $server | 
+where { $_.hotfixid -like "KB948963" }
 ) {
 "Installed"
 } else {
@@ -64,7 +65,8 @@ get-hotfix -computer $server | select KB948963
 }
 
 $KB4012598 = if ( 
-get-hotfix -computer $server | select KB4012598
+get-hotfix -computer $server | 
+where { $_.hotfixid -like "KB4012598" }
 ) {
 "Installed"
 } else {

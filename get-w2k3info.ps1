@@ -47,8 +47,7 @@ $protocols = @(
 )
 
 $COE = if ( 
-get-content \\$server\C$\vlogdir\coe08128.log`
--erroraction silentlycontinue | 
+get-content \\$server\C$\vlogdir\coe08128.log -erroraction silentlycontinue | 
 select-string "9.9.0\\.*has"
 ) { 
 "9.9.0 installed"
@@ -57,8 +56,7 @@ select-string "9.9.0\\.*has"
 }
 
 $KB948963 = if ( 
-get-hotfix -computer $server`
--erroraction silentlycontinue | 
+get-hotfix -computer $server | 
 where { $_.hotfixid -like "KB948963" }
 ) {
 "Installed"
@@ -67,8 +65,7 @@ where { $_.hotfixid -like "KB948963" }
 }
 
 $KB4012598 = if ( 
-get-hotfix -computer $server`
--erroraction silentlycontinue | 
+get-hotfix -computer $server | 
 where { $_.hotfixid -like "KB4012598" }
 ) {
 "Installed"

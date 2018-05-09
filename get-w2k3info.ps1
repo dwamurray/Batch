@@ -99,13 +99,6 @@ elseif (
 { $value = "Disabled" }
 else { $value = "Enabled" }
 
-#$ciphertable = @{
-#Server = $env:computername
-#Value = $cipher
-#Status = $value
-#}
-
-#new-object psobject -property $ciphertable
 $obj | add-member –membertype noteproperty `
 -name "$cipher cipher" –value $value
 
@@ -122,17 +115,8 @@ elseif (
 { $value = "Disabled" }
 else { $value = "Enabled" }
 
-#$protocoltable = @{
-#Server = $env:computername
-#Value = $protocol
-#Status = $value
-#}
-
-#new-object psobject -property $protocoltable
-
 $obj | add-member –membertype noteproperty `
 -name "$protocol protocol" –value $value
-
 
 }
 
@@ -175,5 +159,5 @@ END {}
 
 # Run using any of these formats:
 
-#$env:computername | get-w2k3info | export-csv results.csv -notype
+#'servername' | get-w2k3info | export-csv results.csv -notype
 #get-content servers.txt | get-w2k3info | export-csv results.csv -notype

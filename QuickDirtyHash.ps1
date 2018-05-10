@@ -1,5 +1,4 @@
 $servers = get-content servers.txt
-del output.txt
 foreach ( $server in $servers )
 { $value = if ( get-content \\$server\C$\vlogdir\coe08128.log -erroraction silentlycontinue | 
 select-string "9\.9\.0"
@@ -13,5 +12,3 @@ Value = $value
 
 new-object psobject -property $ciphertable
 }
-
-$ciphertable

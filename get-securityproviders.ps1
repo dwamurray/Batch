@@ -94,6 +94,22 @@ $obj | add-member -membertype noteproperty `
 
 }
 
+foreach ( $protocol in $protocols ) {
+$value = reg query "$protocolpath\$protocol" /v DisabledByDefault 2>&1
+if ( $LASTEXITCODE -eq "1" )
+{ $value = "Not configured" }
+elseif ( 
+( $value | select-string ".x." | select -expand matches | select -expand value) -eq "0x0"`
+-or ( $value | select-string ".x." | select -expand matches | select -expand value) -eq "0"
+)
+{ $value = "Yes" }
+else { $value = "No" }
+
+$obj | add-member -membertype noteproperty `
+-name "$protocol protocol DisabledByDefault" -value $value
+
+}
+
 write-output $obj
 
 }
@@ -131,9 +147,8 @@ querywork $_
 END {}
 } 
 
-# Run using any of these formats:
+# Run using one of these formats:
 
-#$env:computername | get-securityproviders | export-csv results.csv -notype
-get-content servers.txt | get-securityproviders | export-csv results.csv -notype
+#get-content servers.txt | get-securityproviders | export-csv results.csv -notype
 
-#'REEDXWEBWS106A' | get-securityproviders | export-csv results.csv -notype
+'localhost' | get-securityproviders | export-csv results.csv -notype

@@ -102,8 +102,8 @@ elseif (
 ( $value | select-string ".x." | select -expand matches | select -expand value) -eq "0x0"`
 -or ( $value | select-string ".x." | select -expand matches | select -expand value) -eq "0"
 )
-{ $value = "Yes" }
-else { $value = "No" }
+{ $value = "No" }
+else { $value = "Yes" }
 
 $obj | add-member -membertype noteproperty `
 -name "$protocol protocol DisabledByDefault" -value $value

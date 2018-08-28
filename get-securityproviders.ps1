@@ -148,7 +148,6 @@ END {}
 } 
 
 # Run using one of these formats:
+#get-content servers.txt | .\get-securityproviders.ps1 | export-csv results.csv -notype
 
-#get-content servers.txt | get-securityproviders | export-csv results.csv -notype
-
-'localhost' | get-securityproviders | export-csv results.csv -notype
+'localhost' | .\get-securityproviders.ps1 | export-csv results.csv -notype

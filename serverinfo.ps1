@@ -11,7 +11,8 @@ foreach ($server in $list)
 #Progress Bar
 $total=$list.count
 $i++
-Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total" -percentComplete ($i / $list.count*100)
+Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total"`
+-percentComplete ($i / $list.count*100)
  
 #Testing connection to the server, if unable to connect the server is added to error_connecting.txt file
 If(!(Test-Connection -ComputerName $server -count 1 -quiet))

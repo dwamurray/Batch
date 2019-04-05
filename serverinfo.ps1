@@ -1,4 +1,5 @@
-Import-Module ActiveDirectory
+# Uncomment below for Powershell 2.0 only
+#Import-Module ActiveDirectory
 #Use this varilable to set working folder which contains "list.txt" file with a list of servers
 $folder="C:\scanscript\"
 $list=Get-Content  $($folder + "list.txt")
@@ -17,7 +18,7 @@ Write-Progress -Activity "Gathering Information" -status "Scanning Server $serve
 #Testing connection to the server, if unable to connect the server is added to error_connecting.txt file
 If(!(Test-Connection -ComputerName $server -count 1 -quiet))
             {
-            $($server + " cant connect server is not reachable") | out-file $($folder + "error_connecting.txt") -Append
+            $($server + " server is not reachable") | out-file $($folder + "error_connecting.txt") -Append
             }
                                    
 else
@@ -33,10 +34,16 @@ else
             New-Item -ItemType directory -Path $($folder + $server)
            
             #Creating and populating *-Disk.csv file for the server
-            $("Type, Size, Index") | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
-            Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | foreach {$($_.Caption + "," + ([math]::Round($_.Size/ 1Gb)) + "," + $_.Index)} | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
-            $("Drive Letter, Free, Total, Used, Name") |  Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
-            Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | where {$_.DriveType -eq 3} |  foreach {$($_.DeviceID + "," + ([math]::Round($_.FreeSpace/ 1Gb)) + "Gb," + ([math]::Round($_.Size/ 1Gb)) + "Gb," + $(([math]::Round($_.Size/ 1Gb))-([math]::Round($_.FreeSpace/ 1Gb))) + "Gb," +  $_.VolumeName)} | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
+            $("Type, Size, Index") | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
+            Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
+            foreach {$($_.Caption + "," + ([math]::Round($_.Size/ 1Gb)) + "," + $_.Index)} | 
+            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
+            $("Drive Letter, Free, Total, Used, Name") |  
+            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
+            Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
+            where {$_.DriveType -eq 3} |  
+            foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1Gb) + "Gb," + ([math]::Round($_.Size/ 1Gb)) + "Gb," + $(([math]::Round($_.Size/ 1Gb))-([math]::Round($_.FreeSpace/ 1Gb))) + "Gb," +  $_.VolumeName)} | 
+            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
            
             #Creating and populating *-IIS.csv file for the server
             $sites=Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"  -Class IIsWebServerSetting

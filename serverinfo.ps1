@@ -1,6 +1,6 @@
 # Uncomment below for Powershell 2.0 only
 #Import-Module ActiveDirectory
-#Use this varilable to set working folder which contains "list.txt" file with a list of servers
+#Use this variable to set working folder which contains "list.txt" file with a list of servers
 #and will be used to store the output files
 $folder = "C:\temp\scanscript\"
 $list = Get-Content "$folder\list.txt"

@@ -39,16 +39,15 @@ Remove-Item -Path "$folder\$server" -Force -Recurse
 New-Item -ItemType directory -Path "$folder\$server"
            
 #Creating and populating *-Disk.csv file for the server
-echo "Type, Size, Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
+echo "Type,Size,Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
 Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]))} | 
+foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]) + $_.index)} | 
+Out-File "$folder\$server\$server-Disk.csv") -Append
+
+echo "Drive letter,Space Free,Total size,Used space,Name" |
 Out-File "$folder\$server\$server-Disk.csv") -Append
             
-            
-            
-            $("Drive Letter, Free, Total, Used, Name") |  
-            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
-            Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
+Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
             where {$_.DriveType -eq 3} |  
             foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1Gb) + "Gb," + ([math]::Round($_.Size/ 1Gb)) + "Gb," + $(([math]::Round($_.Size/ 1Gb))-([math]::Round($_.FreeSpace/ 1Gb))) + "Gb," +  $_.VolumeName)} | 
             Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii

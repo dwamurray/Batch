@@ -19,23 +19,23 @@ $i++
 Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total"`
 -percentComplete ($i / $list.count*100)
  
-#Testing connection to the server, if unable to connect the server is added to error_connecting.txt file
+#Testing connection to the server, if unable to connect the server is added to errors.txt file
 If(!(Test-Connection -ComputerName $server -count 1 -quiet))
             {
-            "$server - not reachable" | out-file $($folder + "error_connecting.txt") -Append
+            "$server - not reachable" | out-file "$folder\errors.txt") -Append
             }
                                    
 else
             {
            
             #Testing if server folder already exists and deleting it                                
-            if (Test-Path $($folder + $server) -PathType Any)
+            if (Test-Path "$folder\$server") -PathType Any)
                         {
-                        Remove-Item -Path $($folder + $server) -Confirm:$false -Recurse
+                        Remove-Item -Path "$folder\$server" -Force -Recurse
                         }
            
             #Creating folder for the server
-            New-Item -ItemType directory -Path $($folder + $server)
+            New-Item -ItemType directory -Path "$folder\$server"
            
             #Creating and populating *-Disk.csv file for the server
             $("Type, Size, Index") | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append

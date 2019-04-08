@@ -2,10 +2,10 @@
 #Import-Module ActiveDirectory
 #Use this varilable to set working folder which contains "list.txt" file with a list of servers
 #and will be used to store the output files
-$folder="C:\temp\scanscript\"
-$list=Get-Content  $($folder + "list.txt")
+$folder = "C:\temp\scanscript\"
+$list = Get-Content "$folder\list.txt"
 #Makes the value of the result into a table
-$result=@()
+$result = @()
 #Sets initial value of i to 0 for counting loop
 $i = 0
 
@@ -14,7 +14,7 @@ foreach ($server in $list)
 {
  
 #Progress Bar
-$total=$list.count
+$total = $list.count
 $i++
 Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total"`
 -percentComplete ($i / $list.count*100)

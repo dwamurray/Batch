@@ -10,9 +10,9 @@ $result = @()
 $i = 0
 
 #Working through list of servers
-foreach ($server in $list)
-{
- 
+foreach (
+$server in $list
+) { 
 #Progress Bar
 $total = $list.count
 $i++

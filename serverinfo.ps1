@@ -21,26 +21,28 @@ Write-Progress -Activity "Gathering Information" -status "Scanning Server $serve
  
 #Testing connection to the server, if unable to connect the server is added to errors.txt file
 
-if ( !(Test-Connection -ComputerName $server -count 1 -quiet) )
-{ "$server - not reachable" | out-file "$folder\errors.txt") -Append }
+if ( 
+!(Test-Connection -ComputerName $server -count 1 -quiet) 
+) {
+"$server - not reachable" | out-file "$folder\errors.txt") -Append
+}
                                    
-else
-            {
+else {
+#Remove folder if it already exists
+if (
+Test-Path "$folder\$server") -PathType Any
+) {
+Remove-Item -Path "$folder\$server" -Force -Recurse
+}
+
+#Creating folder for the server
+New-Item -ItemType directory -Path "$folder\$server"
            
-            #Testing if server folder already exists and deleting it                                
-            if (Test-Path "$folder\$server") -PathType Any)
-                        {
-                        Remove-Item -Path "$folder\$server" -Force -Recurse
-                        }
-           
-            #Creating folder for the server
-            New-Item -ItemType directory -Path "$folder\$server"
-           
-            #Creating and populating *-Disk.csv file for the server
-            echo "Type, Size, Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
-            Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-            foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]))} | 
-            Out-File "$folder\$server\$server-Disk.csv") -Append
+#Creating and populating *-Disk.csv file for the server
+echo "Type, Size, Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
+Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
+foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]))} | 
+Out-File "$folder\$server\$server-Disk.csv") -Append
             
             
             

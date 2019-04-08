@@ -20,10 +20,9 @@ Write-Progress -Activity "Gathering Information" -status "Scanning Server $serve
 -percentComplete ($i / $list.count*100)
  
 #Testing connection to the server, if unable to connect the server is added to errors.txt file
-If(!(Test-Connection -ComputerName $server -count 1 -quiet))
-            {
-            "$server - not reachable" | out-file "$folder\errors.txt") -Append
-            }
+
+if ( !(Test-Connection -ComputerName $server -count 1 -quiet) )
+{ "$server - not reachable" | out-file "$folder\errors.txt") -Append }
                                    
 else
             {
@@ -38,10 +37,13 @@ else
             New-Item -ItemType directory -Path "$folder\$server"
            
             #Creating and populating *-Disk.csv file for the server
-            $("Type, Size, Index") | Out-File "$folder\$server\$server-Disk.csv") -Append
+            echo "Type, Size, Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
             Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-            foreach {$($_.Caption + "," + ($_.Size/ 1Gb)) + "," + $_.Index)} | 
-            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
+            foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]))} | 
+            Out-File "$folder\$server\$server-Disk.csv") -Append
+            
+            
+            
             $("Drive Letter, Free, Total, Used, Name") |  
             Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
             Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 

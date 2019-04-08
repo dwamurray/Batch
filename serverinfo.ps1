@@ -38,9 +38,9 @@ else
             New-Item -ItemType directory -Path "$folder\$server"
            
             #Creating and populating *-Disk.csv file for the server
-            $("Type, Size, Index") | Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
+            $("Type, Size, Index") | Out-File "$folder\$server\$server-Disk.csv") -Append
             Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-            foreach {$($_.Caption + "," + ([math]::Round($_.Size/ 1Gb)) + "," + $_.Index)} | 
+            foreach {$($_.Caption + "," + ($_.Size/ 1Gb)) + "," + $_.Index)} | 
             Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append
             $("Drive Letter, Free, Total, Used, Name") |  
             Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append

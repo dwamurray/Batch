@@ -1,10 +1,14 @@
 # Uncomment below for Powershell 2.0 only
 #Import-Module ActiveDirectory
 #Use this varilable to set working folder which contains "list.txt" file with a list of servers
-$folder="C:\scanscript\"
+#and will be used to store the output files
+$folder="C:\temp\scanscript\"
 $list=Get-Content  $($folder + "list.txt")
+#Makes the value of the result into a table
 $result=@()
+#Sets initial value of i to 0 for counting loop
 $i = 0
+
 #Working through list of servers
 foreach ($server in $list)
 {
@@ -18,7 +22,7 @@ Write-Progress -Activity "Gathering Information" -status "Scanning Server $serve
 #Testing connection to the server, if unable to connect the server is added to error_connecting.txt file
 If(!(Test-Connection -ComputerName $server -count 1 -quiet))
             {
-            $($server + " server is not reachable") | out-file $($folder + "error_connecting.txt") -Append
+            "$server - not reachable" | out-file $($folder + "error_connecting.txt") -Append
             }
                                    
 else

@@ -24,7 +24,7 @@ Write-Progress -Activity "Gathering Information" -status "Scanning Server $serve
 if ( 
 !(Test-Connection -ComputerName $server -count 1 -quiet) 
 ) {
-"$server - not reachable" | out-file "$folder\errors.txt") -Append
+"$server - not reachable" | out-file "$folder\errors.txt" -Append
 }
                                    
 else {

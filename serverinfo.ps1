@@ -18,19 +18,22 @@ $total = $list.count
 $i++
 Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total"`
 -percentComplete ($i / $list.count*100)
+
  
 #Testing connection to the server, if unable to connect the server is added to errors.txt file
+# Loop then starts again with next server in the list
 
 if ( 
 !(Test-Connection -ComputerName $server -count 1 -quiet) 
 ) {
 "$server - not reachable" | out-file "$folder\errors.txt" -Append
-}
-                                   
-else {
-#Remove folder if it already exists
+continue
+} else {
+     
+#Remove folder if it already exists                              
+
 if (
-Test-Path "$folder\$server") -PathType Any
+Test-Path "$folder\$server" -PathType Any
 ) {
 Remove-Item -Path "$folder\$server" -Force -Recurse
 }
@@ -39,20 +42,20 @@ Remove-Item -Path "$folder\$server" -Force -Recurse
 New-Item -ItemType directory -Path "$folder\$server"
            
 #Creating and populating *-Disk.csv file for the server
-echo "Type,Size,Index" | Out-File "$folder\$server\$server-Disk.csv") -Append
+echo "Type,Size,Index" | Out-File "$folder\$server\$server-Disk.csv" -Append
 Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-foreach {$($_.Caption + "," + ($_.Size/ 1Gb -as [int]) + $_.index)} | 
-Out-File "$folder\$server\$server-Disk.csv") -Append
+foreach {$($_.Caption + "," + ($_.Size/ 1MB -as [int]))} | 
+Out-File "$folder\$server\$server-Disk.csv" -Append
 
 echo "Drive letter,Space Free,Total size,Used space,Name" |
-Out-File "$folder\$server\$server-Disk.csv") -Append
+Out-File "$folder\$server\$server-Disk.csv" -Append
 
 #Obtain information about C: drive and add to *-Disk.csv
-Get-WmiObject -Class Win32_logicaldisk -ComputerName localhost | 
+Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
 where {$_.DriveType -eq 3} |
-foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1Gb -as [int]) + "GB," + ($_.Size/ 1Gb -as [int])`
-+ "GB," + $(($_.Size/ 1Gb -as [int]) - ($_.FreeSpace/ 1Gb -as [int])) + "GB," +  $_.VolumeName)}
-Out-File "$folder\$server\$server-Disk.csv") -Append
+foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1MB -as [int]) + "MB," + ($_.Size/ 1MB -as [int])`
++ "MB," + $(($_.Size/ 1MB -as [int]) - ($_.FreeSpace/ 1MB -as [int])) + "MB," +  $_.VolumeName)} |
+Out-File "$folder\$server\$server-Disk.csv" -Append
 
 #Creating and populating *-IIS.csv file for the server
 $sites = Get-WmiObject -ComputerName $server -namespace "root/MicrosoftIISv2"  -Class IIsWebServerSetting
@@ -62,7 +65,8 @@ $site in $sites
 ) {
 $iis=""
 $sitename=""
-$site.ServerComment | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
+$site.ServerComment | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append
+
 Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"`
 -Query "SELECT * FROM IIsWebVirtualDirSetting" | 
 where {$_.Name -match $site.name} | 
@@ -176,10 +180,10 @@ Get-WmiObject Win32_share -ComputerName $server | foreach $({$_.Name + "," + $_.
            
 Copy-Item -Path $("\\"+ $Server + "\C$\windows\system32\drivers\etc\hosts") -Destination $($folder + $server)
 
-}
            
 #Get SPN
            
 $($([adsisearcher]"(&(objectCategory=Computer)(name=$server))").findall()).properties.serviceprincipalname  | out-File $($folder + $server + "\" +  $server + "-SPN.csv") -Append -Encoding ascii
 
+}
 }

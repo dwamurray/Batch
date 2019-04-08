@@ -46,23 +46,31 @@ Out-File "$folder\$server\$server-Disk.csv") -Append
 
 echo "Drive letter,Space Free,Total size,Used space,Name" |
 Out-File "$folder\$server\$server-Disk.csv") -Append
-            
-Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
-            where {$_.DriveType -eq 3} |  
-            foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1Gb) + "Gb," + ([math]::Round($_.Size/ 1Gb)) + "Gb," + $(([math]::Round($_.Size/ 1Gb))-([math]::Round($_.FreeSpace/ 1Gb))) + "Gb," +  $_.VolumeName)} | 
-            Out-File $($folder + $server + "\" +  $server + "-Disk.csv") -Append -Encoding ascii
-           
-            #Creating and populating *-IIS.csv file for the server
-            $sites=Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"  -Class IIsWebServerSetting
-            $("Site, Virtual Directory") | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
-            foreach ($site in $sites)
-                        {
-                        $iis=""
-                        $sitename=""
-                        $site.ServerComment | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
-                        Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"  -Query "SELECT * FROM IIsWebVirtualDirSetting" | where {$_.Name -match $site.name} | foreach {$($site.ServerComment + "," + $_.path)} | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
-                        }
-            #Creating and populating *-Services.csv file for the server
+
+#Obtain information about C: drive and add to *-Disk.csv
+Get-WmiObject -Class Win32_logicaldisk -ComputerName localhost | 
+where {$_.DriveType -eq 3} |
+foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1Gb -as [int]) + "GB," + ($_.Size/ 1Gb -as [int])`
++ "GB," + $(($_.Size/ 1Gb -as [int]) - ($_.FreeSpace/ 1Gb -as [int])) + "GB," +  $_.VolumeName)}
+Out-File "$folder\$server\$server-Disk.csv") -Append
+
+#Creating and populating *-IIS.csv file for the server
+$sites=Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"  -Class IIsWebServerSetting
+$("Site, Virtual Directory") | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
+foreach (
+$site in $sites
+) {
+$iis=""
+$sitename=""
+$site.ServerComment | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
+Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"`
+-Query "SELECT * FROM IIsWebVirtualDirSetting" | 
+where {$_.Name -match $site.name} | 
+foreach {$($site.ServerComment + "," + $_.path)} | 
+Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
+}
+
+#Creating and populating *-Services.csv file for the server
             $("Name, DisplayName, StartMode, Started, LogOnAs") | Out-File $($folder + $server + "\" +  $server + "-Services.csv") -Append -Encoding ascii
             Get-WmiObject win32_service -ComputerName $server | foreach {$($_.Name + "," + $_.DisplayName + "," + $_.StartMode + "," + $_.Started + "," + $_.StartName)} | Out-File $($folder + $server + "\" +  $server + "-Services.csv") -Append -Encoding ascii
            

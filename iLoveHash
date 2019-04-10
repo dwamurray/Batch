@@ -1,7 +1,0 @@
-This shall be a new PowerShell script that calculates SHA1 (or possibly MD5) checksums for a list of files once a week and compares weekly hashes to ensure file integrity.  The latter part will likely be using compare-object cmdlet.
-
-This is to ensure that my backed up files are getting corrupted by dodgy disks etc.
-
-A poor man's ZFS, BTRFS or ReFS ... and boy, am I a poor man.
-
-Also want to get some kind of PowerShell GUI prompt that lets you use a dialog box to specify files to compare with.

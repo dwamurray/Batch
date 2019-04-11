@@ -4,8 +4,6 @@
 #and will be used to store the output files
 $folder = "C:\temp\scanscript\"
 $list = Get-Content "$folder\list.txt"
-#Makes the value of the result into a table
-$result = @()
 #Sets initial value of i to 0 for counting loop
 $i = 0
 
@@ -19,8 +17,7 @@ $i++
 Write-Progress -Activity "Gathering Information" -status "Scanning Server $server - $i / $total"`
 -percentComplete ($i / $list.count*100)
 
- 
-#Testing connection to the server, if unable to connect the server is added to errors.txt file
+#Testing connection to the server, if unable to connect the server name is added to errors.txt file
 # Loop then starts again with next server in the list
 
 if ( 
@@ -42,15 +39,11 @@ Remove-Item -Path "$folder\$server" -Force -Recurse
 New-Item -ItemType directory -Path "$folder\$server"
            
 #Creating and populating *-Disk.csv file for the server
-echo "Type,Size,Index" | Out-File "$folder\$server\$server-Disk.csv" -Append
-Get-WmiObject -Class Win32_DiskDrive -ComputerName $server | 
-foreach {$($_.Caption + "," + ($_.Size/ 1MB -as [int]))} | 
+
+"Drive letter,Space Free,Total size,Used space,Name" |
 Out-File "$folder\$server\$server-Disk.csv" -Append
 
-echo "Drive letter,Space Free,Total size,Used space,Name" |
-Out-File "$folder\$server\$server-Disk.csv" -Append
-
-#Obtain information about C: drive and add to *-Disk.csv
+#Obtain information about logical drives and add to *-Disk.csv
 Get-WmiObject -Class Win32_logicaldisk -ComputerName $server | 
 where {$_.DriveType -eq 3} |
 foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1MB -as [int]) + "MB," + ($_.Size/ 1MB -as [int])`

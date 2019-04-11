@@ -51,14 +51,14 @@ foreach {$($_.DeviceID + "," + ($_.FreeSpace/ 1MB -as [int]) + "MB," + ($_.Size/
 Out-File "$folder\$server\$server-Disk.csv" -Append
 
 #Creating and populating *-IIS.csv file for the server
-$sites = Get-WmiObject -ComputerName $server -namespace "root/MicrosoftIISv2"  -Class IIsWebServerSetting
-echo "Site, Virtual Directory" | Out-File "$folder\$server\$server-IIS.csv" -Append
-foreach (
-$site in $sites
-) {
-$iis=""
-$sitename=""
-$site.ServerComment | Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append
+
+Get-WmiObject -ComputerName localhost -namespace "root/MicrosoftIISv2"`
+-Query "SELECT * FROM IIsWebVirtualDirSetting" |
+select path
+
+Get-WmiObject -namespace "root/MicrosoftIISv2" -Class IIsWebServerSetting | 
+foreach {$($_.ServerComment + "," + $_.AppPoolID)}
+
 
 Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"`
 -Query "SELECT * FROM IIsWebVirtualDirSetting" | 
@@ -74,45 +74,15 @@ foreach {$($_.Name + "," + $_.DisplayName + "," + $_.StartMode + "," + $_.Starte
 Out-File $($folder + $server + "\" +  $server + "-Services.csv") -Append
            
 #Create and populating *-Applications.csv file for server
-$MasterKeys = @()
-$LMkeys = "Software\Microsoft\Windows\CurrentVersion\Uninstall","SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
-$LMtype = [Microsoft.Win32.RegistryHive]::LocalMachine
-$LMRegKey = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($LMtype,$server)
-ForEach (
-$Key in $LMkeys
-) {
-$RegKey = $LMRegKey.OpenSubkey($key)
-ForEach (
-$subName in $RegKey.getsubkeynames()
-) {
-foreach ( 
-$sub in $RegKey.opensubkey($subName)
-) {
-$MasterKeys += (New-Object PSObject -Property @{
-"ComputerName" = $server
-"Name" = $sub.getvalue("displayname")
-"SystemComponent" = $sub.getvalue("systemcomponent")
-"ParentKeyName" = $sub.getvalue("parentkeyname")
-"Version" = $sub.getvalue("DisplayVersion")
-"UninstallCommand" = $sub.getvalue("UninstallString")
-} )
-}
-}
-}
-$("Name, Version")  | Out-File $($folder + $server + "\" +  $server + "-Applications.csv") -Append -Encoding ascii
-$MasterKeys = ($MasterKeys | Where {$_.Name -ne $Null -AND $_.SystemComponent -ne "1" -AND $_.ParentKeyName -eq $Null} | 
-select Name,Version,ComputerName,UninstallCommand | 
-sort Name)
-foreach (
-$key in $masterkeys
-) {
-$($key.Name + "," + $key.Version)  | 
-Out-File $($folder + $server + "\" +  $server + "-Applications.csv") -Append
-}
-           
+
+"Software\Microsoft\Windows\CurrentVersion\Uninstall",
+"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+          
 #Create and populating *-Groups.csv file for server
            
-$groups=([ADSI]"WinNT://$Server,computer").psbase.children | where { $_.psbase.schemaClassName -eq 'group' } | foreach { ($_.name)[0]}
+$groups=([ADSI]"WinNT://$Server,computer").psbase.children | 
+where { $_.psbase.schemaClassName -eq 'group' } | 
+foreach { ($_.name)[0]}
 $("Group, Members") | out-File $($folder + $server + "\" +  $server + "-Groups.csv") -Append -Encoding ascii
 foreach (
 $Group in $groups

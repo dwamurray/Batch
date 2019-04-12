@@ -1,0 +1,2 @@
+# From auth.log find all login failures, sort them by username & source IP address and count the number of each
+Try to do this in PS and in Bash.  Maybe ... also in Python too for total overkill

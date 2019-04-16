@@ -52,26 +52,25 @@ Out-File "$folder\$server\$server-Disk.csv" -Append
 
 #Creating and populating *-IIS.csv file for the server
 
+"IIS directory" | out-file "$folder\$server\$server-IIS.csv" -Append
+
 Get-WmiObject -ComputerName localhost -namespace "root/MicrosoftIISv2"`
 -Query "SELECT * FROM IIsWebVirtualDirSetting" |
-select path
+select -expand path |
+out-file "$folder\$server\$server-IIS.csv" -Append
 
+"Website, Application Pool ID" | out-file "$folder\$server\$server-IIS.csv" -Append
 Get-WmiObject -namespace "root/MicrosoftIISv2" -Class IIsWebServerSetting | 
-foreach {$($_.ServerComment + "," + $_.AppPoolID)}
-
-
-Get-WmiObject -Authentication PacketPrivacy -Impersonation Impersonate -ComputerName $server -namespace "root/MicrosoftIISv2"`
--Query "SELECT * FROM IIsWebVirtualDirSetting" | 
-where {$_.Name -match $site.name} | 
-foreach {$($site.ServerComment + "," + $_.path)} | 
-Out-File $($folder + $server + "\" +  $server + "-IIS.csv") -Append -Encoding ascii
-}
+foreach {$($_.ServerComment + "," + $_.AppPoolID)} |
+out-file "$folder\$server\$server-IIS.csv" -Append
 
 #Creating and populating *-Services.csv file for the server
-$("Name, DisplayName, StartMode, Started, LogOnAs") | Out-File $($folder + $server + "\" +  $server + "-Services.csv") -Append -Encoding ascii
+$("Name, DisplayName, StartMode, Started, LogOnAs") | 
+Out-File "$folder\$server\$server-Services.csv" -Append
+
 Get-WmiObject win32_service -ComputerName $server | 
 foreach {$($_.Name + "," + $_.DisplayName + "," + $_.StartMode + "," + $_.Started + "," + $_.StartName)} | 
-Out-File $($folder + $server + "\" +  $server + "-Services.csv") -Append
+Out-File "$folder\$server\$server-Services.csv" -Append
            
 #Create and populating *-Applications.csv file for server
 

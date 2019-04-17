@@ -65,7 +65,7 @@ foreach {$($_.ServerComment + "," + $_.AppPoolID)} |
 out-file "$folder\$server\$server-IIS.csv" -Append
 
 #Creating and populating *-Services.csv file for the server
-$("Name, DisplayName, StartMode, Started, LogOnAs") | 
+"Name, DisplayName, StartMode, Started, LogOnAs" | 
 Out-File "$folder\$server\$server-Services.csv" -Append
 
 Get-WmiObject win32_service -ComputerName $server | 

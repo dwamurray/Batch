@@ -1,4 +1,5 @@
-# From auth.log (/var/log/secure in CentOS/Redhat etc) find all login failures, sort them by username & source IP address and count the number of each
+# From auth.log (/var/log/secure in CentOS/Redhat etc) find all login failures, 
+# sort them by username & source IP address and count the number of each
 # Try to do this in PS and in Bash.  Maybe ... also in Python too for total overkill
 
 grep -i "failed password" auth.log | awk -F" " '{print $9}' | uniq -c
@@ -8,4 +9,4 @@ grep -i "failed password" auth.log | awk -F" " '{print $9}' | uniq -c
 grep -i "failed password" auth.log | awk -F" " '{print $11}' 
 
 #Gives the source IP address of each failed logon attempt
-.
+

@@ -8,3 +8,4 @@ grep -i "failed password" auth.log | awk -F" " '{print $9}' | uniq -c
 grep -i "failed password" auth.log | awk -F" " '{print $11}' 
 
 #Gives the source IP address of each failed logon attempt
+.

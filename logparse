@@ -13,3 +13,12 @@ grep -i "failed password" auth.log | awk -F" " '{print $11}'
 #How about this?
 
 grep -i "failed password" auth.log | awk -F" " '{print $9, "", $11}' | uniq -c
+
+#PowerShell
+
+$failures = get-content auth.log |
+select-string "Failed password for (.)*\.(.)*\.(.)*\...." |
+select -expand matches |
+select -expand value
+
+$failures.split(" ") 

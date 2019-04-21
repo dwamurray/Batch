@@ -1,8 +1,8 @@
 '''
 Supply a range of numbers from first to last and the integer
 with which to divide by.  If the returned value is 0 then
-it means the number in the range was divisible by the
-integer without returning any fraction
+it means the number in the range returns an integer when
+divided by the divisor
 '''
 
 def divisible(first, last, divisor):

@@ -8,7 +8,7 @@ integer without returning any fraction
 def divisible(first, last, divisor):
     for num in range(first, last+1):
         if num % divisor == 0:
-            print num
+            print(num)
 
 divisible(20,1000,17)
   

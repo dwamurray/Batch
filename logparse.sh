@@ -2,7 +2,7 @@
 # sort them by username & source IP address and count the number of failures for
 # each user
 
-# Sample file: ttps://github.com/dwamurray/repo-depo/blob/master/auth.log
+# Sample file: https://github.com/dwamurray/repo-depo/blob/master/auth.log
 
 # grep -i "failed password" auth.log | awk -F" " '{print $9}' | uniq -c
 # Gives number of times each user name has been used for an unsuccessful logon attempt

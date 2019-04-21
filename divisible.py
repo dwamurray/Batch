@@ -10,10 +10,10 @@ def divisible(first, last, divisor):
         if num % divisor == 0:
             print num
 
-'''
-Example:
 divisible(20,1000,17)
+  
+'''
 Will return all the numbers between 20 and 1000 inclusive
 that can be divided by 17 and return a integer (whole)
-value, 34, 51, 67 etc
+value, 34, 51, 68 etc
 '''

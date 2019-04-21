@@ -1,0 +1,39 @@
+Apr 17 21:09:19 web1 login: pam_unix(login:session): session opened for user root by LOGIN(uid=0)
+Apr 17 21:09:19 web1 login: ROOT LOGIN ON tty1
+Apr 17 21:09:23 web1 polkitd[2706]: Registered Authentication Agent for unix-process:6892:30794260 (system bus name :1.199 [/usr/bin/pkttyagent --notify-fd 5 --fallback], object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_GB.UTF-8)
+Apr 18 17:27:15 web1 polkitd[2706]: Loading rules from directory /etc/polkit-1/rules.d
+Apr 18 17:27:15 web1 polkitd[2706]: Loading rules from directory /usr/share/polkit-1/rules.d
+Apr 18 17:27:15 web1 polkitd[2706]: Finished loading, compiling and executing 2 rules
+Apr 18 17:27:15 web1 polkitd[2706]: Acquired the name org.freedesktop.PolicyKit1 on the system bus
+Apr 18 17:27:17 web1 sshd[3243]: Server listening on 0.0.0.0 port 22.
+Apr 18 17:27:17 web1 sshd[3243]: Server listening on :: port 22.
+Apr 18 17:27:45 web1 sshd[3973]: Accepted password for david from 192.168.0.11 port 58010 ssh2
+Apr 18 17:27:46 web1 sshd[3973]: pam_unix(sshd:session): session opened for user david by (uid=0)
+Apr 18 17:27:50 web1 sudo:   david : TTY=pts/0 ; PWD=/home/david ; USER=root ; COMMAND=/bin/su
+Apr 18 17:27:50 web1 sudo: pam_unix(sudo:session): session opened for user root by david(uid=0)
+Apr 18 17:27:50 web1 su: pam_unix(su:session): session opened for user root by david(uid=0)
+Apr 18 19:19:34 web1 su: pam_unix(su:session): session closed for user root
+Apr 18 19:19:34 web1 sudo: pam_unix(sudo:session): session closed for user root
+Apr 18 19:19:36 web1 sshd[3977]: Received disconnect from 192.168.0.11 port 58010:11: disconnected by user
+Apr 18 19:19:36 web1 sshd[3977]: Disconnected from 192.168.0.11 port 58010
+Apr 18 19:19:36 web1 sshd[3973]: pam_unix(sshd:session): session closed for user david
+Apr 18 19:19:40 web1 unix_chkpwd[4101]: password check failed for user (david)
+Apr 18 19:19:40 web1 sshd[4099]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.11  user=david
+Apr 18 19:19:42 web1 sshd[4099]: Failed password for david from 192.168.0.11 port 58962 ssh2
+Apr 18 19:19:43 web1 unix_chkpwd[4102]: password check failed for user (david)
+Apr 18 19:19:45 web1 sshd[4099]: Failed password for david from 192.168.0.11 port 58962 ssh2
+Apr 18 19:19:46 web1 unix_chkpwd[4103]: password check failed for user (david)
+Apr 18 19:19:48 web1 sshd[4099]: Failed password for david from 192.168.0.11 port 58962 ssh2
+Apr 18 19:19:48 web1 sshd[4099]: Connection closed by 192.168.0.11 port 58962 [preauth]
+Apr 18 19:19:48 web1 sshd[4099]: PAM 2 more authentication failures; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.11  user=david
+Apr 18 19:19:56 web1 unix_chkpwd[4106]: password check failed for user (root)
+Apr 18 19:19:56 web1 sshd[4104]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.11  user=root
+Apr 18 19:19:56 web1 sshd[4104]: pam_succeed_if(sshd:auth): requirement "uid >= 1000" not met by user "root"
+Apr 18 19:19:59 web1 sshd[4104]: Failed password for root from 192.168.0.11 port 58964 ssh2
+Apr 18 19:20:00 web1 sshd[4104]: Connection closed by 192.168.0.11 port 58964 [preauth]
+Apr 18 19:20:06 web1 unix_chkpwd[4109]: password check failed for user (daemon)
+Apr 18 19:20:06 web1 sshd[4107]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.0.11  user=daemon
+Apr 18 19:20:06 web1 sshd[4107]: pam_succeed_if(sshd:auth): requirement "uid >= 1000" not met by user "daemon"
+Apr 18 19:20:08 web1 sshd[4107]: Failed password for daemon from 192.168.0.11 port 58965 ssh2
+Apr 18 19:20:09 web1 sshd[4107]: Connection closed by 192.168.0.11 port 58965 [preauth]
+Apr 18 19:20:20 web1 sshd[4110]: Accepted password for david from 192.168.0.11 port 58967 ssh2

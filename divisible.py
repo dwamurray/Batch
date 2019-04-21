@@ -6,7 +6,6 @@ integer without returning any fraction
 '''
 
 def divisible(first, last, divisor):
-    count = 0
     for num in range(first, last+1):
         if num % divisor == 0:
             print num

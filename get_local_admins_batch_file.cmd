@@ -1,0 +1,1 @@
+for /F "usebackq delims==" %%i in (servers.txt) do wmic /node:"%%i" path win32_groupuser where (groupcomponent="win32_group.name=\"administrators\",domain=\"%%i\"") > %%i-locadmins.txt

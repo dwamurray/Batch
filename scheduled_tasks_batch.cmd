@@ -1,0 +1,1 @@
+for /F "usebackq delims==" %%i in (servers.txt) do schtasks.exe /s %%i /query /v > %%i-tasks.txt

@@ -1,0 +1,1 @@
+for /F "usebackq delims==" %%i in (servers.txt) do wmic /node:%%i service get displayname, name, state, startmode, startname > %%i-services.txt

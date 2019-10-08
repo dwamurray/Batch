@@ -6,8 +6,7 @@ REM Specify errorlevel 1 as the first condition, otherwise hosts that don't reso
 
 @echo off
 if exist pingresults.txt (del pingresults.txt)  
-for /F %%i in (servers.txt) do ping %%i -n 1 | find "TTL" > nul & if errorlevel 1 ( 
-echo %%i inaccessible >> pingresults.txt 
-) else (
-echo %%i up >> pingresults.txt
-)
+for /F %%i in (servers.txt) do ping %%i -n 1 | find "TTL" > nul & 
+if errorlevel 1 (echo %%i inaccessible >> pingresults.txt) 
+else (if errorlevel 0 echo %%i up >> pingresults.txt) 
+else (echo %%i not up >> pingresults.txt)
